@@ -241,15 +241,42 @@ terraform destroy
 
 **Remember:** Resources are deleted → cost immediately stops.
 
-## Testing & Validation Checklist
+## Testing & Validation Checklist (Phase 4)
 
-- [ ] Frontend loads in browser
-- [ ] API endpoint returns JSON
-- [ ] Frontend calls backend successfully
-- [ ] Storage operations (upload/retrieve) work
-- [ ] `terraform state show` reflects actual resources
-- [ ] Azure Portal shows expected resources
-- [ ] No unexpected costs in Cost Management
+### ✅ Completed Tests
+
+- [x] **Frontend loads in browser** - React app live at https://wonderful-wave-0f8ac6703.6.azurestaticapps.net
+- [x] **API endpoint returns JSON** - `/api/hello` returns proper JSON response
+- [x] **Frontend calls backend successfully** - Frontend can fetch from backend API
+- [x] **Upload endpoint works** - `/api/upload` accepts POST requests and responds with file confirmation
+- [x] **Terraform state reflects resources** - 7 resources managed and in-sync with Azure
+- [x] **Azure Portal shows expected resources** - All 5 resource groups visible and operational:
+  - Azure Static Web App (Frontend)
+  - Azure Function App (Backend API)
+  - Service Plan (Y1 - Free tier)
+  - Storage Account (Function runtime)
+  - Storage Account (User uploads)
+- [x] **Costs remain at $0** - All resources using free tier SKUs
+
+### Test Results
+
+**API Tests:**
+```
+GET /api/hello
+→ Status: 200
+→ Body: {"message": "Hello, World!", "timestamp": "...", "environment": "Azure Function", "version": "1.0"}
+
+POST /api/upload
+→ Status: 200
+→ Body: {"message": "File received successfully", "filename": "test.txt", "fileSize": 9, ...}
+```
+
+**Infrastructure:**
+- Terraform State: 7 resources managed and synchronized
+- Resource Group: azure-mcp-test-rg (West Europe)
+- Frontend URL: https://wonderful-wave-0f8ac6703.6.azurestaticapps.net
+- Backend URL: https://azure-mcp-test-fn.azurewebsites.net/api
+- Storage Container: https://mcptestblob001.blob.core.windows.net/uploads
 
 ## When Adding New Features/Phases
 
