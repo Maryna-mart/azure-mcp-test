@@ -42,3 +42,9 @@ variable "function_app_name" {
   type        = string
   default     = "azure-mcp-test-fn"
 }
+
+variable "blob_storage_name" {
+  description = "Name of the Blob Storage account (must be globally unique, lowercase, 3-24 chars)"
+  type        = string
+  default     = "mcptestblob001"
+}

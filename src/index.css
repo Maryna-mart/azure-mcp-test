@@ -108,3 +108,24 @@ button:disabled {
 .info {
   background: linear-gradient(135deg, rgba(0, 120, 212, 0.05), rgba(80, 230, 255, 0.05));
 }
+
+.file-input-label {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 1rem;
+}
+
+.file-input-label:hover {
+  background-color: #005a9e;
+}
+
+.file-name {
+  margin-top: 12px;
+  color: #666;
+  font-size: 0.95rem;
+}

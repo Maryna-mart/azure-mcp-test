@@ -65,8 +65,9 @@ resource "azurerm_linux_function_app" "main" {
   functions_extension_version = "~4"
 
   app_settings = {
-    FUNCTIONS_WORKER_RUNTIME       = "node"
+    FUNCTIONS_WORKER_RUNTIME         = "node"
     FUNCTIONS_WORKER_RUNTIME_VERSION = "18"
+    BLOB_STORAGE_CONNECTION_STRING   = azurerm_storage_account.blob_storage.primary_connection_string
   }
 
   site_config {
@@ -82,5 +83,23 @@ resource "azurerm_linux_function_app" "main" {
   }
 
   tags = var.tags
+}
+
+# Blob Storage for file uploads (separate from function storage)
+resource "azurerm_storage_account" "blob_storage" {
+  name                     = var.blob_storage_name
+  resource_group_name      = azurerm_resource_group.main.name
+  location                 = azurerm_resource_group.main.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+
+  tags = var.tags
+}
+
+# Blob container for uploads
+resource "azurerm_storage_container" "uploads" {
+  name                  = "uploads"
+  storage_account_name  = azurerm_storage_account.blob_storage.name
+  container_access_type = "blob"  # Public read access to blobs
 }
 
