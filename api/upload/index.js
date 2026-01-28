@@ -9,7 +9,8 @@ module.exports = async function (context, req) {
     if (!connectionString) {
       return {
         status: 500,
-        body: JSON.stringify({ error: "Storage connection string not configured" }),
+        headers: { "Content-Type": "application/json" },
+        body: { error: "Storage connection string not configured" }
       };
     }
 
@@ -19,7 +20,8 @@ module.exports = async function (context, req) {
     if (!filename || !content) {
       return {
         status: 400,
-        body: JSON.stringify({ error: "filename and content are required" }),
+        headers: { "Content-Type": "application/json" },
+        body: { error: "filename and content are required" }
       };
     }
 
@@ -29,23 +31,24 @@ module.exports = async function (context, req) {
     const blockBlobClient = containerClient.getBlockBlobClient(filename);
 
     // Upload blob
-    const uploadBlobResponse = await blockBlobClient.upload(content, content.length);
+    await blockBlobClient.upload(content, content.length);
 
-    context.res = {
+    return {
       status: 200,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+      body: {
         message: "File uploaded successfully",
         filename: filename,
         url: blockBlobClient.url,
-        timestamp: new Date().toISOString(),
-      }),
+        timestamp: new Date().toISOString()
+      }
     };
   } catch (error) {
     context.log(`Error: ${error.message}`);
-    context.res = {
+    return {
       status: 500,
-      body: JSON.stringify({ error: error.message }),
+      headers: { "Content-Type": "application/json" },
+      body: { error: error.message }
     };
   }
 };
