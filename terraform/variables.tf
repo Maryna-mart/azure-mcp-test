@@ -24,3 +24,21 @@ variable "tags" {
     Project     = "AzureMCPTest"
   }
 }
+
+variable "function_storage_name" {
+  description = "Name of the storage account for Function App (must be globally unique, lowercase)"
+  type        = string
+  default     = "mcptestfnstore001"
+}
+
+variable "function_plan_name" {
+  description = "Name of the Function App service plan"
+  type        = string
+  default     = "azure-mcp-test-plan"
+}
+
+variable "function_app_name" {
+  description = "Name of the Azure Function App"
+  type        = string
+  default     = "azure-mcp-test-fn"
+}

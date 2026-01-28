@@ -9,7 +9,8 @@ function App() {
   const callAPI = async () => {
     setLoading(true)
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:7071'
+      // Use environment variable if available, otherwise use the deployed Azure Function URL
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://azure-mcp-test-fn.azurewebsites.net'
       const response = await fetch(`${apiUrl}/api/hello`)
       const data = await response.json()
       setApiResponse(JSON.stringify(data, null, 2))

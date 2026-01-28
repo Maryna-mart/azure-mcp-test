@@ -18,3 +18,18 @@ output "resource_group_name" {
   description = "Name of the resource group"
   value       = azurerm_resource_group.main.name
 }
+
+output "function_app_name" {
+  description = "Name of the Function App"
+  value       = azurerm_linux_function_app.main.name
+}
+
+output "function_app_url" {
+  description = "URL of the Function App"
+  value       = "https://${azurerm_linux_function_app.main.default_hostname}"
+}
+
+output "function_app_id" {
+  description = "ID of the Function App"
+  value       = azurerm_linux_function_app.main.id
+}
