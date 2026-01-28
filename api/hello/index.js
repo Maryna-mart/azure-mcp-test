@@ -19,6 +19,6 @@ module.exports = async function (context, req) {
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type'
     },
-    body: responseMessage
+    body: JSON.stringify(responseMessage)
   };
 };
