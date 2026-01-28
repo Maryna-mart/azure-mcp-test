@@ -8,6 +8,8 @@ This is a **test project** evaluating whether Claude + Azure MCP + Terraform can
 
 **Goal:** Assess Claude's ability to generate working Terraform configs, Azure Function code, and provide clear explanations throughout the deployment process.
 
+**⚠️ Cost Policy:** This project uses **Azure Free Tier ONLY**. All resources must remain on free tier. Current cost: **$0/month**.
+
 ## Architecture Overview
 
 The project follows a three-tier architecture:
@@ -208,11 +210,36 @@ Once Phase 1 begins, the repository will contain:
 | Terraform plan shows unexpected changes | Run `terraform refresh` to sync state with actual resources |
 | Want to see what Terraform will change | Always run `terraform plan` before `terraform apply` |
 
-## Cost Management
+## Cost Management & Free Tier Policy
 
-- All resources use Azure free tier (0 cost)
-- Monitor actual costs in Azure Portal: Cost Management + Billing
-- Run `terraform destroy` at end of testing to clean up
+**This project operates on Azure Free Tier ONLY. Cost = $0/month.**
+
+### Allowed Resources (Free Tier)
+- ✅ **Azure Static Web App** - Free tier (1 per subscription)
+- ✅ **Azure Functions** - First 1M executions/month free
+- ✅ **Azure Blob Storage** - First 5GB/month free
+- ✅ **Data Transfer** - Free tier includes generous allowances
+
+### What NOT to Do (Would Cost Money)
+- ❌ Do NOT use premium/paid SKUs
+- ❌ Do NOT use App Service Plans (use Functions consumption/free plan only)
+- ❌ Do NOT add SQL databases or paid services
+- ❌ Do NOT enable traffic manager, CDN premium, or other paid addons
+- ❌ Do NOT leave resources running for months without cleanup
+
+### Monitoring Costs
+1. Check Azure Portal: **Cost Management + Billing**
+2. Verify all resources show "Free" SKU
+3. If costs appear, run `terraform destroy` immediately
+
+### When Testing is Complete
+Run to delete all resources and ensure zero cost:
+```bash
+cd terraform
+terraform destroy
+```
+
+**Remember:** Resources are deleted → cost immediately stops.
 
 ## Testing & Validation Checklist
 
@@ -227,12 +254,19 @@ Once Phase 1 begins, the repository will contain:
 ## When Adding New Features/Phases
 
 1. **Plan changes:** What new Azure resources are needed?
-2. **Update Terraform:** Add to `main.tf`, `variables.tf`, `outputs.tf`
-3. **Test plan:** `terraform plan` to preview changes
-4. **Apply:** `terraform apply` to deploy
-5. **Deploy code:** Upload any function/frontend updates
-6. **Test:** Verify new feature works end-to-end
-7. **Document:** Update this file if workflow changes
+2. **Verify free tier:** Confirm resource SKU is free (not paid)
+3. **Update Terraform:** Add to `main.tf`, `variables.tf`, `outputs.tf`
+4. **Test plan:** `terraform plan` to preview changes and SKUs
+5. **Apply:** `terraform apply` to deploy
+6. **Deploy code:** Upload any function/frontend updates
+7. **Test:** Verify new feature works end-to-end
+8. **Verify cost:** Check that new resources are free tier
+9. **Document:** Update this file if workflow changes
+
+**Before committing any Terraform changes:**
+- Run `terraform plan` and verify all SKUs are free (look for `sku_tier = "Free"`, etc.)
+- Do NOT use premium or paid SKUs
+- Do NOT add services not on the free tier
 
 ## References
 
