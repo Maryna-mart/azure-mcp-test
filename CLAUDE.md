@@ -80,18 +80,35 @@ az functionapp log tail --name <function-name> --resource-group <rg-name>
 ### Development Workflow
 
 ```bash
-# Test frontend locally before deploying
-npm run dev          # Start local dev server
-npm run build        # Build for production
+# Frontend Development
+npm run dev          # Start local dev server on http://localhost:5173
+npm run build        # Build for production (output to dist/)
+npm run preview      # Preview production build locally
 
-# Test Azure Function locally (when Phase 2 starts)
-func start           # Local function runtime
+# Deploy Frontend to Azure (after building)
+# First, get the deployment token:
+source .env.terraform
+cd terraform && terraform output -raw deployment_token
 
-# Validate Terraform without deploying
-terraform validate
+# Then deploy:
+swa deploy dist --deployment-token <TOKEN> --env production
 
-# Check Terraform formatting
-terraform fmt --check=true -recursive
+# Terraform Infrastructure
+cd terraform
+terraform init       # Initialize (one-time)
+terraform plan       # Preview changes
+terraform apply      # Deploy changes
+terraform destroy    # Tear down all resources
+terraform validate   # Validate syntax
+terraform fmt        # Format files
+
+# View current outputs (URLs, etc)
+terraform output
+terraform output -raw static_web_app_url
+
+# Azure CLI diagnostics
+az account show
+az resource list --output table
 ```
 
 ## Terraform Structure
@@ -137,6 +154,22 @@ Once Phase 1 begins, the repository will contain:
 - Verify all components working together
 - Review Terraform state and outputs
 - Run `terraform destroy` to clean up (cost = $0)
+
+## Current Project State (After Phase 1)
+
+**Live Frontend:** https://wonderful-wave-0f8ac6703.6.azurestaticapps.net
+
+**Deployment Token:** Stored in `.env.terraform` (DO NOT COMMIT)
+
+**To make changes:**
+1. Edit React code in `src/`
+2. Run `npm run build`
+3. Run `swa deploy dist --deployment-token <TOKEN> --env production`
+
+**To update infrastructure:**
+1. Edit `terraform/main.tf`, `terraform/variables.tf`, `terraform/outputs.tf`
+2. Run `cd terraform && terraform plan` (preview changes)
+3. Run `terraform apply` (deploy changes)
 
 ## Key Development Notes
 
